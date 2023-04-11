@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "DataCenterOrganizer",
+    "slug": "DataCenterOrganizer",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
