@@ -1,12 +1,23 @@
 import React from 'react';
+import AppLoading from 'expo-app-loading';
+import { ThemeProvider } from 'styled-components';
 import { StatusBar } from 'react-native';
-import { View, Text } from 'react-native';
 
+import { useFonts, Rajdhani_400Regular } from '@expo-google-fonts/rajdhani';
+import theme from './src/global/styles/theme';
 import { Dashboard } from './src/screens/Dashboard';
 
 export default function App() {
-  return <>
-    <Dashboard/>
+  const [fontsLoaded] = useFonts({
+    Rajdhani_400Regular,
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />
+  }
+
+  return <ThemeProvider theme={theme}>
+    <Dashboard />
     <StatusBar barStyle='light-content' />
-  </>
+  </ThemeProvider>
 }

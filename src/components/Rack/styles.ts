@@ -8,5 +8,4 @@ export const RackView = styled.View`
 export const U = styled.View`
     width: 100%;
     height: 20px;
-    background-color: white;
 `

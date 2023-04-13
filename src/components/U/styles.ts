@@ -12,5 +12,6 @@ export const U_view = styled.View`
 `
 
 export const U_text = styled.Text`
-    color: #eee;
+    color: ${({ theme }) => theme.colors.rack};
+    font-family: ${({ theme }) => theme.fonts.regular};
 `
