@@ -11,8 +11,8 @@ export function U(props: Props) {
     const { asset, index } = props;
 
     return <U_view>
-        <U_text>{index+1}</U_text>
-        <U_text>{asset}</U_text>
-        <U_text>{index+1}</U_text>
+        <U_text asset={asset}>{index+1}</U_text>
+        <U_text asset={asset}>{asset}</U_text>
+        <U_text asset={asset}>{index+1}</U_text>
     </U_view>
 }

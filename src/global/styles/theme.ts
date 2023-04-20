@@ -3,6 +3,7 @@ export default {
         headerBackground: '#8992a8',
         background: 'black',
         rack: '#eee',
+        rackEmpty: 'red',
     },
     fonts: {
         regular: 'Rajdhani_400Regular',
