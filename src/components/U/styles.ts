@@ -21,4 +21,12 @@ export const U_text = styled.Text<Uprops>`
     };
 
     font-family: ${({ theme }) => theme.fonts.regular};
+    `
+
+export const U_edit = styled.TextInput`
+    background-color: ${({ theme}) => theme.colors.inputBackground};
+    color: ${({ theme}) => theme.colors.rack};
+    
+    font-family: ${({ theme }) => theme.fonts.regular};
+
 `

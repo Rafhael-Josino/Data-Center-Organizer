@@ -1,4 +1,4 @@
-import React from "react";
+import React,  { useState } from "react";
 import { FlatList } from "react-native";
 
 import { 
@@ -8,17 +8,31 @@ import {
     RackView,
 } from "./styles";
 import { U } from "../../components/U";
+import { UType } from "../../types";
 
 export function Rack() {
-    const RackData = [] // this will be a prop
-    for (let i=1; i<23; i++) RackData.push({
-        asset: 'SW' + String(i),
-        index: String(i),
-    });
-    for (let i=23; i<43; i++) RackData.push({
-        asset: '-',
-        index: String(i),
-    });
+    const [rackData, setRackData] = useState([
+        {
+            asset: 'SW1',
+            index: '0'
+        },
+        {
+            asset: '-',
+            index: '1'
+        },
+
+    ]);
+
+    const updateRackU = (newU: UType) => {
+        const index = Number(newU.index);
+
+        setRackData([
+            ...rackData.slice(0, index),
+            newU,
+            ...rackData.slice(index+1)
+        ]);
+    }
+
 
     return <Main>
         <Header>
@@ -27,11 +41,12 @@ export function Rack() {
         
         <RackView>
             <FlatList
-                data={RackData}
+                data={rackData}
                 keyExtractor={item => item.index}
                 renderItem={({item, index}) => <U 
                     asset={item.asset}
                     index={index}
+                    updateRackU={updateRackU}
                 />}
             />
         </RackView>

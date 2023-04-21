@@ -1,8 +1,13 @@
-export type Rack = {
+export type UType = {
+    asset: string,
+    index: string,
+}
+
+export type RackType = {
     name: string,
 }
 
-export type Room = {
+export type RoomType = {
     name: string,
-    grid: Rack[][],
+    grid: RackType[][],
 }
