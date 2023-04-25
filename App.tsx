@@ -10,7 +10,8 @@ import theme from './src/global/styles/theme';
 import { View, Text } from 'react-native'
 
 import { Dashboard } from './src/screens/Dashboard';
-import { Rack } from './src/screens/Rack';
+import { Rack } from './src/screens/Modals/RackModal';
+import { Register } from './src/screens/Register';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -25,7 +26,7 @@ export default function App() {
   }
 
   return <ThemeProvider theme={theme}>
-    <Rack />
+    <Register />
     <StatusBar barStyle='light-content' />
   </ThemeProvider>
 }

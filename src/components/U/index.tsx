@@ -7,11 +7,11 @@ import { UType } from "../../types";
 type Props = {
     asset: string; // for now receives only the name
     index: number;
-    updateRackU: (newU: UType) => void;
+    closeSelect?: () => void;
 }
 
 export function U(props: Props) {
-    const { asset, index, updateRackU } = props;
+    const { asset, index, closeSelect } = props;
     const [editU, setEditU] = useState(false);
     const [tempAsset, setTempAsset] = useState(asset);
 
@@ -35,13 +35,6 @@ export function U(props: Props) {
         <U_text asset={asset}>
             {asset}
         </U_text>
-
-
-    useEffect(() => {
-        if (!editU) {
-            updateRackU({ asset: tempAsset, index: String(index)})
-        }
-    }, [editU])   
 
     return <TouchableHighlight onPress={onPressHandler}>
         <U_view>
