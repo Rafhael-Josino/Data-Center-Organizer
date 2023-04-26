@@ -26,7 +26,7 @@ export function SelectModal(props: Props) {
 
     return <Container>
         <Header>
-            <Title>{ list ? 'Select Room' : 'Select Rack'}</Title>
+            <Title>Select one</Title>
         </Header>
 
         <FlatList
