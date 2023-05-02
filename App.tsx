@@ -1,5 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
+import { View, Text } from 'react-native'
 import { ThemeProvider } from 'styled-components';
 import { 
   useFonts, 
@@ -7,10 +8,11 @@ import {
   Rajdhani_700Bold,
 } from '@expo-google-fonts/rajdhani';
 import theme from './src/global/styles/theme';
-import { View, Text } from 'react-native'
+
+import { NavigationContainer } from '@react-navigation/native'
+import { AppRoutes } from './src/routes/app.routes';
 
 import { Dashboard } from './src/screens/Dashboard';
-import { Rack } from './src/screens/Modals/RackModal';
 import { Register } from './src/screens/Register';
 
 export default function App() {
@@ -26,7 +28,9 @@ export default function App() {
   }
 
   return <ThemeProvider theme={theme}>
-    <Register />
+    <NavigationContainer>
+      <AppRoutes />
+    </NavigationContainer>
     <StatusBar barStyle='light-content' />
   </ThemeProvider>
 }
