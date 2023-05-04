@@ -1,6 +1,8 @@
 import React from "react";
 import { FlatList } from "react-native";
+import { RectButton } from "react-native-gesture-handler";
 
+import theme from '../../../global/styles/theme';
 import { RoomType, RackType } from "../../../utils/SelectOptions";
 import { Button } from "../../../components/Forms/Button";
 import {
@@ -34,12 +36,17 @@ export function SelectModal(props: Props) {
             style={{ flex: 1, width: '100%' }}
             keyExtractor={item => item.key}
             renderItem={({ item }) => (
+              <RectButton
+                rippleColor={theme.colors.headerBackground}
+              >
                 <Option 
                     onPress={() => setSelection(item)}
                     isActive={item.key === selection.key}
-                >
+                    >
                     <Name>{item.name}</Name>
-                </Option>)}
+                </Option>
+              </RectButton>
+            )}
             ItemSeparatorComponent={() => <Separator />}
         />
 

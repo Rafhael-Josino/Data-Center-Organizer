@@ -1,10 +1,8 @@
 import React from "react";
 
-import {
-    Container,
-    Title,
-} from './styles';
+import { Container, Title } from './styles';
 import { TouchableOpacityProps } from "react-native";
+import { RectButton } from "react-native-gesture-handler";
 
 interface Props extends TouchableOpacityProps {
     title: string;
@@ -13,9 +11,13 @@ interface Props extends TouchableOpacityProps {
 export function Button(props: Props) {
     const { title, ...rest } = props;
 
-    return <Container {...rest}>
-        <Title>
-            { title }
-        </Title>
-    </Container>
+    return <RectButton
+      rippleColor='gray'
+    >
+      <Container {...rest}>
+          <Title>
+              { title }
+          </Title>
+      </Container>
+    </RectButton>
 }

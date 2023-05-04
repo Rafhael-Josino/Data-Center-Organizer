@@ -171,10 +171,8 @@ export function Register() {
             />
           </Fields>
           
-          <Button 
-            title='Send' 
-            onPress={registerHandler}    
-          />
+          <Button title='Send' onPress={registerHandler} />
+ 
         </Form>
         
         <Modal visible={modalSelect === 'room'}>

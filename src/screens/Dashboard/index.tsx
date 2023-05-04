@@ -1,34 +1,21 @@
 import React from "react";
+import { BorderlessButton, RectButton } from "react-native-gesture-handler";
 
 import { 
     Main,
     Header,
     HeaderText,
     Photo,
-    Menu,
-    MenuIcon,
-    NewDataCenterIcon,
-    OpenDataCenterIcon,
 } from "./styles";
 
 export function Dashboard() {
 
+    // return <TouchableWithoutFeedback style={{ height: '100%' }}>
     return <Main>
-        <Header>
-            <HeaderText>DataCenter Organizer</HeaderText>
+      <Header>
+          <HeaderText>DataCenter Organizer</HeaderText>
 
-            <Photo source={{ uri: 'https://reactnative.dev/img/tiny_logo.png'}} />
-        </Header>
-
-        <Menu>
-            <MenuIcon>
-                <NewDataCenterIcon name='page-add' />
-            </MenuIcon>
-
-            <MenuIcon>
-                <OpenDataCenterIcon name='edit' />
-            </MenuIcon>
-        </Menu>
-        
+          <Photo source={{ uri: 'https://reactnative.dev/img/tiny_logo.png'}} />
+      </Header>
     </Main>
 }
