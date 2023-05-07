@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { 
   Modal, 
   Alert, 
@@ -7,11 +8,12 @@ import {
 } from 'react-native';
 
 import { SelectModal } from '../Modals/SelectModal';
-import { Rooms, Racks, RoomType, RackType } from '../../utils/SelectOptions';
 import { Input } from '../../components/Forms/Input';
 import { Button } from '../../components/Forms/Button';
 import { SelectButton } from '../../components/Forms/SelectButton';
 import { RackModal } from '../Modals/RackModal';
+
+import { TestData, RoomType, RackType } from "../../utils/SelectOptions";
 
 import { 
     Container,
@@ -27,18 +29,13 @@ export function Register() {
      */
     const [registerName, setRegisterName] = useState('');
     const [registerSize, setRegisterSize] = useState(0);
-    const [selectedRoom, setSelectedRoom] = useState<RoomType>({
-      key: '-1',
-      name: '',
-    });
-    const [selectedRack, setSelectedRack] = useState<RackType>({
-      key: '-1',
-      name: '',
-      assets: [],
-    });
+    const [selectedRoom, setSelectedRoom] = useState<number>(-1);
+    const [selectedRack, setSelectedRack] = useState<number>(-1);
     const [selectedU, setSelectedU] = useState<number[]>([]);
     const [modalSelect, setModalSelect] = useState<'closed'|'room'|'rack'|'U'>('closed')
-     
+    const [testData, setTestData] = useState<RoomType[]>([]);
+    const [loadDataToggle, setLoadDataToggle] = useState(true);
+
 
     /**
      * Handlers
@@ -48,7 +45,7 @@ export function Register() {
     }
 
     const setModalRackHandler = () => {
-      if (selectedRoom.key !== '-1') {
+      if (selectedRoom !== -1) {
         setModalSelect('rack')
       }
       else {
@@ -61,15 +58,15 @@ export function Register() {
 
     // make name and size states that are necessary to open U selector modal
     const setModalUHandler = () => {
-      if (selectedRack.key === '-1') {
+      if (selectedRack === -1) {
         Alert.alert('Hold up!', 'The rack must be chosen first');
       }
       else if (registerName === "" || registerName === "-") {
         Alert.alert('Hold up!', 'Invalid name to new equipament');    
       }
-      else if (selectedRack.assets.includes(registerName)) {
-        Alert.alert('Hold up!', 'There is already an equipament with this name');    
-      }
+      // else if (testData[selectedRoom].assets.includes(registerName)) {
+      //   Alert.alert('Hold up!', 'There is already an equipament with this name');    
+      // }
       else if(Number(registerSize) <= 0) {
         Alert.alert('Hold up!', 'Invalid size of new equipament', [{
           text: 'Ok',
@@ -81,46 +78,84 @@ export function Register() {
       }
     }    
 
-    const setSelectRoomHandler = (selectedRoom: RoomType) => {
+    const setSelectRoomHandler = (selectedRoom: number) => {
       setSelectedRoom(selectedRoom);
     }
 
-    const setSelectedRackHandler = (selectedRack: RackType) => {
+    const setSelectedRackHandler = (selectedRack: number) => {
       setSelectedRack(selectedRack);
     }
 
     const setSelectedUHandler = (index: number) => {
       const newSelectedUs = [];
       
-      for (let i=index; i<index+Number(registerSize); i++) {
+      for (let i=index; i<index + Number(registerSize); i++) {
         newSelectedUs.push(i);
       }
 
       setSelectedU(newSelectedUs);
     }
 
-    const registerHandler = () => {
+    const registerHandler = async () => {
       const enableToRegister = (
         registerName !== '' &&
         registerSize > 0 &&
-        selectedRoom.key !== '-1' &&
-        selectedRack.key !== '-1' &&
+        selectedRoom !== -1 &&
+        selectedRack !== -1 &&
         selectedU.length
       ); 
 
       if (!enableToRegister) {
-        Alert.alert('Unable to Register', 'Please check information provided');
+        Alert.alert('Unable to Register', 'Please check the information provided');
       } else {
-        // Submit form
+        // get racks's data, make a copy through .map so is possible to edit and save it
+        try {
+          selectedU.map(u => {
+            testData[selectedRoom].racks[selectedRack].assets[u] = registerName;
+          });
+
+          await AsyncStorage.setItem('@DataCenterOrganizer:testData', JSON.stringify(testData));
+          
+          setRegisterName("");
+          setRegisterSize(0);
+          setSelectedRoom(-1);
+          setSelectedRack(-1);
+          setSelectedU([]);
+          setLoadDataToggle(!loadDataToggle);
+
+          // Alert.alert("Successful!", "Data Center updated");
+        } catch (err) {
+          console.log('Error at loading data\n', err);
+          Alert.alert("Error", "Data update failed");      
+        }
       }
     }     
 
 
     /**
-     * Effect
+     * Use Effect
      */
     useEffect(() => {
-        setSelectedRack({ key: '-1', name: '', assets: [] });
+      const loadData = async () => {
+        try {
+          const loadedData = await AsyncStorage.getItem('@DataCenterOrganizer:testData');
+    
+          if (loadedData?.length) {
+            setTestData(JSON.parse(loadedData));
+          } else {
+            setTestData(TestData);
+          }
+        } catch (err) {
+          console.log('Error at loading data\n', err);
+          Alert.alert("Error", "Data loading failed");
+        }
+      }
+      
+      loadData();
+    }, [loadDataToggle]);
+  
+    useEffect(() => {
+        setSelectedRack(-1);
     }, [selectedRoom]);
 
     useEffect(() => {
@@ -141,6 +176,7 @@ export function Register() {
           <Fields>
             <Input
               placeholder='Name'
+              value={registerName}
               inputMode='text'
               onChangeText={setRegisterName}
               autoCapitalize='none'
@@ -148,18 +184,19 @@ export function Register() {
 
             <Input
               placeholder='Size'
+              value={String(registerSize || '')}
               inputMode='numeric'
               onChangeText={text => setRegisterSizeHandler(text)}
             />
               
             <SelectButton 
-              title={`Room: ${selectedRoom.name}`} 
+              title={`Room: ${testData[selectedRoom]?.name || ''}`} 
               onPress={() => setModalSelect('room')}    
               activeOpacity={0.7}
             />
 
             <SelectButton 
-              title={`Rack: ${selectedRack.name}`} 
+              title={`Rack: ${testData[selectedRoom]?.racks[selectedRack]?.name || ''}`} 
               onPress={setModalRackHandler}
               activeOpacity={0.7}
             />
@@ -172,7 +209,6 @@ export function Register() {
           </Fields>
           
           <Button title='Send' onPress={registerHandler} />
- 
         </Form>
         
         <Modal visible={modalSelect === 'room'}>
@@ -180,7 +216,7 @@ export function Register() {
             selection={selectedRoom}
             setSelection={setSelectRoomHandler}
             closeSelect={() => setModalSelect('closed')}
-            list={Rooms}
+            list={testData.map(r => r.name)}
           />
         </Modal>
 
@@ -189,7 +225,7 @@ export function Register() {
             selection={selectedRack}
             setSelection={setSelectedRackHandler}
             closeSelect={() => setModalSelect('closed')}
-            list={Racks[Number(selectedRoom.key)]}
+            list={testData[selectedRoom]?.racks.map(r => r.name)}
           />
         </Modal>
 
@@ -197,7 +233,7 @@ export function Register() {
           <RackModal
             selectedU={selectedU}
             setSelectUHandler={setSelectedUHandler}
-            rackData={selectedRack}
+            rackData={testData[selectedRoom]?.racks[selectedRack]}
             closeSelect={() => setModalSelect('closed')}
             registerName={registerName}
             registerSize={registerSize}

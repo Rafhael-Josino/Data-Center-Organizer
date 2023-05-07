@@ -2,18 +2,20 @@ import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
+import { RectButton } from 'react-native-gesture-handler';
+
+export const GestureContainer = styled(RectButton)`
+  background-color: ${({ theme }) => theme.colors.inputBackground};
+  width: 100%;
+  height: ${RFPercentage(8)}px;
+  padding: 16px 18px;
+  border-radius: 5px;
+`;
 
 export const Container = styled(TouchableOpacity)`
-    background-color: ${({ theme }) => theme.colors.inputBackground};
-    
-    width: 100%;
-    height: ${RFPercentage(8)}px;
-    padding: 16px 18px;
-    border-radius: 5px;
-
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 export const Category = styled.Text`

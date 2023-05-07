@@ -3,7 +3,6 @@ import { FlatList } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 
 import theme from '../../../global/styles/theme';
-import { RoomType, RackType } from "../../../utils/SelectOptions";
 import { Button } from "../../../components/Forms/Button";
 import {
     Container,
@@ -17,10 +16,10 @@ import {
 
 
 type Props = {
-    selection: RoomType | RackType;
+    selection: number;
     setSelection: (selection: any) => void;
     closeSelect: () => void;
-    list: RoomType[] | RackType[];
+    list: string[];
 }
 
 export function SelectModal(props: Props) {
@@ -32,29 +31,29 @@ export function SelectModal(props: Props) {
         </Header>
 
         <FlatList
-            data={list}
-            style={{ flex: 1, width: '100%' }}
-            keyExtractor={item => item.key}
-            renderItem={({ item }) => (
-              <RectButton
-                rippleColor={theme.colors.headerBackground}
+          data={list}
+          style={{ flex: 1, width: '100%' }}
+          keyExtractor={item => item}
+          renderItem={({ item, index }) => (
+            <RectButton
+              rippleColor={theme.colors.headerBackground}
+            >
+              <Option 
+                onPress={() => setSelection(index)}
+                isActive={index === selection}
               >
-                <Option 
-                    onPress={() => setSelection(item)}
-                    isActive={item.key === selection.key}
-                    >
-                    <Name>{item.name}</Name>
-                </Option>
-              </RectButton>
-            )}
-            ItemSeparatorComponent={() => <Separator />}
+                <Name>{item}</Name>
+              </Option>
+            </RectButton>
+          )}
+          ItemSeparatorComponent={() => <Separator />}
         />
 
         <Footer>
-            <Button 
-                title='Select' 
-                onPress={closeSelect}
-            />
+          <Button 
+            title='Select' 
+            onPress={closeSelect}
+          />
         </Footer>
     </Container>
 }
